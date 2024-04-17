@@ -1,8 +1,11 @@
 <script setup>
 import { housesService } from '../services/HousesService.js';
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { logger } from '../utils/Logger.js';
 import { Modal } from 'bootstrap';
+import { AppState } from '../AppState.js';
+
+const house = computed(() => AppState.activeHouse)
 
 const editableHouseData = ref({
     year: 0,
@@ -14,22 +17,12 @@ const editableHouseData = ref({
     price: 0
 })
 
-async function createHouse() {
+// TODO use a watch to WATCH the active house in the appstate
+// whenever the active house changes, set the editableHouseData value to the active house
+
+async function updateHouse() {
     try {
-        await housesService.createHouse(editableHouseData.value)
-
-        editableHouseData.value = {
-            year: 0,
-            levels: 0,
-            bedrooms: 0,
-            bathrooms: 0,
-            imgUrl: '',
-            description: '',
-            price: 0
-        }
-
-        Modal.getOrCreateInstance('#houseFormModal').hide()
-
+        console.log("updating house")
     } catch (error) {
         logger.log(error)
     }
@@ -38,20 +31,21 @@ async function createHouse() {
 </script>
 
 <template>
-    <div class="modal fade" id="houseFormModal" tabindex="-1" aria-labelledby="houseFormModalLabel" aria-hidden="true">
+    <div class="modal fade" id="houseUpdateFormModal" tabindex="-1" aria-labelledby="houseUpdateFormModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="houseFormModalLabel">List New House</h1>
+                    <h1 class="modal-title fs-5" id="houseUpdateFormModalLabel">uPDATE hOUSE</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
-                    <form @submit.prevent="createHouse()">
+                    <form @submit.prevent="updateHouse()">
 
                         <div class="form-floating mb-3">
                             <input v-model="editableHouseData.year" type="number" class="form-control" id="houseYear"
-                                placeholder="1975" required min="1800" max="2026">
+                                placeholder="1975" min="1800" max="2026">
                             <label for="houseYear">Year House Built</label>
                         </div>
 

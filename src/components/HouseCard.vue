@@ -18,6 +18,11 @@ async function destroyHouse(houseId) {
     }
 }
 
+function assignHouseToUpdate(house) {
+    AppState.activeHouse = house
+    console.log(house)
+}
+
 const account = computed(() => AppState.account)
 
 defineProps({ house: House })
@@ -26,8 +31,8 @@ defineProps({ house: House })
 
 
 <template>
-    <div class="card col-6">
-        <div class="card-img">
+    <div class="card col-5 m-3 shadow">
+        <div class="card-img pt-3">
             <img :src="house.imgUrl" alt="" class="img-fluid">
         </div>
         <div class="card-body">
@@ -36,6 +41,9 @@ defineProps({ house: House })
             <p class="card-text">Description: {{ house.description }}</p>
             <p>Price: {{ house.price }}$</p>
             <div class="d-flex justify-content-end">
+                <button v-if="house.creatorId == account?.id" class="btn btn-outline-success align-start"
+                    @click="assignHouseToUpdate(house)" title="Update House Listing" data-bs-toggle="modal"
+                    data-bs-target="#houseUpdateFormModal">Edit<i class="mdi mdi-pencil"></i></button>
                 <button v-if="house.creatorId == account?.id" class="btn btn-outline-danger align-end"
                     @click="destroyHouse(`${house.id}`)"><i class="mdi mdi-home-off"></i></button>
             </div>
