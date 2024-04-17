@@ -10,5 +10,6 @@ export class House {
         this.levels = data.levels
         this.price = data.price
         this.year = data.year
+        this.creatorId = data.creatorId
     }
 }
